@@ -13,7 +13,7 @@ class Prompts {
   create(promptData, username) {
     const newPrompt = {
       ...promptData,
-      _id: Date.now().toString(),
+      _id: { $oid: Date.now().toString() },
       actor: { username },
     };
     this.prompts.push(newPrompt);
@@ -30,6 +30,14 @@ class Prompts {
       prompt.actor.username === username ||
       (prompt.visibility === "custom" && prompt.sharedAccess.includes(username))
     );
+  }
+
+  get(promptId, username) {
+    const prompt = this.prompts.find((p) => p._id.$oid === promptId);
+    if (prompt && this.canAccess(prompt, username)) {
+      return prompt;
+    }
+    return null;
   }
 }
 
@@ -48,5 +56,9 @@ const newPrompt = promptManager.create(
   "Amjad"
 );
 
-// Get all prompts for a user
+// Getting all prompts for a user
 console.log("All prompts for user1:", promptManager.getAll("Amjad"));
+
+// Getting a specific prompt
+console.log(newPrompt._id.$oid)
+console.log("Get prompt by ID:", promptManager.get(newPrompt._id.$oid, "Amjad"));
