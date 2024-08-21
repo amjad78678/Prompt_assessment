@@ -50,6 +50,18 @@ class Prompts {
     }
     return null;
   }
+
+  delete(promptId, username) {
+    const index = this.prompts.findIndex(
+      (p) => p._id.$oid === promptId && p.actor.username === username
+    );
+    if (index !== -1) {
+      const deletedData = this.prompts.splice(index, 1);
+    //   console.log(deletedData);
+      return deletedData[0];
+    }
+    return null;
+  }
 }
 
 const promptManager = new Prompts(prompts, users);
@@ -85,4 +97,6 @@ const updatedPrompt = promptManager.update(
 );
 console.log("Updated prompt:", updatedPrompt);
 
-
+// Deleting a prompt
+const deletedPrompt = promptManager.delete(newPrompt._id.$oid, "Amjad");
+console.log("Deleted prompt:", deletedPrompt);
