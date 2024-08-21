@@ -1,38 +1,44 @@
-const prompts = require('./prompts.json');
+const prompts = require("./prompts.json");
+const users = require("./users.json");
 
 // print prompts
-console.log(prompts)
+// console.log(prompts);
 
-// Write your code here...
+class Prompts {
+  constructor(promptsData, usersData) {
+    this.prompts = promptsData;
+    this.users = usersData;
+  }
 
-/**
- * Task: 
- *   - Here is the json file which contains number of prompts with structure
- * 
- *  @Prompts:
- *  - _id: ObjectId
- *  - prompt: <prompt>
- *  - label: <label>
- *  - visibility: [public, private, custom],
- *  - sharedAccess: [],
- *  - description: "",
- *  - type: '',
- *  - subtype: '',
- *  - actor: { username: '' }
- * 
- *  @Users:
- *    - username: 
- *    - email: 
- *    - password:
- *    - firstName: 
- *    - lastName: 
- *    - email: 
- * 
- *  @Description:
- *    - import both JSON files prompts.json user.json
- *    - write a class Prompts which takes prompts schema as input
- *    - create methods for create, update, get, getAll, delete prompts
- *    - prompts can only be access with the username.
- *    - You can only see the prompts that are either public or their they are created by you
- *    - Implement the logic for sharedAccess where visibility is custom, and other user can see those prompts if they are in sharedAccess list
- */
+  create(promptData, username) {
+    const newPrompt = {
+      ...promptData,
+      _id: Date.now().toString(),
+      actor: { username },
+    };
+    this.prompts.push(newPrompt);
+    return newPrompt;
+  }
+
+  getAll(username) {
+    return this.prompts.filter((prompt) => prompt.actor.username === username);
+  }
+}
+
+const promptManager = new Prompts(prompts, users);
+
+//Creating a new prompt
+const newPrompt = promptManager.create(
+  {
+    prompt: "New prompt",
+    label: "Test",
+    visibility: "private",
+    description: "A test prompt",
+    type: "general",
+    subtype: "question",
+  },
+  "Amjad"
+);
+
+// Get all prompts for a user
+console.log("All prompts for user1:", promptManager.getAll("Amjad"));
