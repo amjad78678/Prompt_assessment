@@ -21,7 +21,15 @@ class Prompts {
   }
 
   getAll(username) {
-    return this.prompts.filter((prompt) => prompt.actor.username === username);
+    return this.prompts.filter((prompt) => this.canAccess(prompt, username));
+  }
+
+  canAccess(prompt, username) {
+    return (
+      prompt.visibility === "public" ||
+      prompt.actor.username === username ||
+      (prompt.visibility === "custom" && prompt.sharedAccess.includes(username))
+    );
   }
 }
 
