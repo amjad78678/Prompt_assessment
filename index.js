@@ -39,6 +39,17 @@ class Prompts {
     }
     return null;
   }
+
+  update(promptId, updatedData, username) {
+    const index = this.prompts.findIndex(
+      (p) => p._id.$oid === promptId && p.actor.username === username
+    );
+    if (index !== -1) {
+      this.prompts[index] = { ...this.prompts[index], ...updatedData };
+      return this.prompts[index];
+    }
+    return null;
+  }
 }
 
 const promptManager = new Prompts(prompts, users);
@@ -60,5 +71,18 @@ const newPrompt = promptManager.create(
 console.log("All prompts for user1:", promptManager.getAll("Amjad"));
 
 // Getting a specific prompt
-console.log(newPrompt._id.$oid)
-console.log("Get prompt by ID:", promptManager.get(newPrompt._id.$oid, "Amjad"));
+console.log(newPrompt._id.$oid);
+console.log(
+  "Get prompt by ID:",
+  promptManager.get(newPrompt._id.$oid, "Amjad")
+);
+
+// Updating a prompt
+const updatedPrompt = promptManager.update(
+  newPrompt._id.$oid,
+  { label: "Updated Test" },
+  "Amjad"
+);
+console.log("Updated prompt:", updatedPrompt);
+
+
