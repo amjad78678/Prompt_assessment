@@ -57,7 +57,7 @@ class Prompts {
     );
     if (index !== -1) {
       const deletedData = this.prompts.splice(index, 1);
-    //   console.log(deletedData);
+      //   console.log(deletedData);
       return deletedData[0];
     }
     return null;
@@ -76,27 +76,29 @@ const newPrompt = promptManager.create(
     type: "general",
     subtype: "question",
   },
-  "Amjad"
+  users[0].username
 );
 
 // Getting all prompts for a user
-console.log("All prompts for user1:", promptManager.getAll("Amjad"));
+console.log("All prompts for user1:", promptManager.getAll(users[0].username));
 
 // Getting a specific prompt
-console.log(newPrompt._id.$oid);
 console.log(
   "Get prompt by ID:",
-  promptManager.get(newPrompt._id.$oid, "Amjad")
+  promptManager.get(newPrompt._id.$oid, users[0].username)
 );
 
 // Updating a prompt
 const updatedPrompt = promptManager.update(
   newPrompt._id.$oid,
   { label: "Updated Test" },
-  "Amjad"
+  users[0].username
 );
 console.log("Updated prompt:", updatedPrompt);
 
 // Deleting a prompt
-const deletedPrompt = promptManager.delete(newPrompt._id.$oid, "Amjad");
+const deletedPrompt = promptManager.delete(
+  newPrompt._id.$oid,
+  users[0].username
+);
 console.log("Deleted prompt:", deletedPrompt);
